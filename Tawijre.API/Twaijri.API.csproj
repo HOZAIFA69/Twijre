@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Twijre.Core\Twijre.Core.csproj" />
+    <ProjectReference Include="..\Twijre.Core\Twaijri.Core.csproj" />
   </ItemGroup>
 
   <ProjectExtensions>
