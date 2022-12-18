@@ -58,8 +58,9 @@ namespace Twijre.API.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
-                var Invoice = _mapper.Map<Invoice>(createDto);
-                var result = await _unitOfWork.Invoices.AddAsync(Invoice);
+                var invoice = _mapper.Map<Invoice>(createDto);
+                invoice.Value = createDto.InvoiceValue;
+                var result = await _unitOfWork.Invoices.AddAsync(invoice);
                 _unitOfWork.Complete();
                 return Ok();
             }

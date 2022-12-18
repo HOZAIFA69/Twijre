@@ -10,14 +10,17 @@ namespace Twijre.API
     {
         public AutoMapperProfile()
         {
-            CreateMap<Customer ,CustomerCreateDto>().ReverseMap();
-            CreateMap<Customer , CustomerDto>().ReverseMap();
+            CreateMap<Customer, CustomerCreateDto>().ReverseMap();
+
+            CreateMap<Customer, CustomerDto>()
+             .ForMember(m => m.Invoices, opt => opt.MapFrom(p => p.Invoices));
+
+;
             CreateMap<Customer , CustomerUpdateDto>().ReverseMap();
 
             CreateMap<Invoice, InvoiceCreateDto>().ReverseMap();
             CreateMap<Invoice, InvoicesDto>().ReverseMap();
             CreateMap<Invoice, InvoiceUpdateDto>().ReverseMap();
-
 
         }
     }

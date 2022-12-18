@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Twaijri.Core.Interfaces;
+using Twaijri.Core.Repositories;
 using Twijre.Core.Interfaces;
 using Twijre.Core.Repositories;
 using Twijre.EF;
@@ -20,6 +22,7 @@ options.UseSqlServer(
                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ISpecialCustomersRepository, SpecialCustomersRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Angular", policy =>

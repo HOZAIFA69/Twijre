@@ -7,7 +7,7 @@ namespace Twijre.API.Dtos.Invoice
     {
         [Required] public int Id { get; set; }
         [Required] public int CustomerId { get; set; }
-        [Required] public Decimal Value { get; set; }
+        [Required] public Decimal InvoiceValue { get; set; }
         public State state { get; set; }
     }
 }

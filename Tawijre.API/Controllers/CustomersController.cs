@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Twaijri.Core.Interfaces;
 using Twijre.API.Dtos.Customer;
+using Twijre.API.Dtos.Invoice;
 using Twijre.Core.Interfaces;
 using Twijre.EF.Models;
 
@@ -14,15 +16,24 @@ namespace Twijre.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ISpecialCustomersRepository _specialCustomersRepository;
 
-        public CustomersController(IUnitOfWork unitOfWork, IMapper mapper)
+        public CustomersController(IUnitOfWork unitOfWork, IMapper mapper , ISpecialCustomersRepository specialCustomersRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _specialCustomersRepository = specialCustomersRepository;
         }
-
-
-
+        [HttpGet("GetCustomersIncludeInvoice/{id}")]
+        public async Task<IActionResult> GetCustomersIncludeInvoice(int id)
+        {
+            CustomerDto customerDto = new CustomerDto();
+            var customer = await _specialCustomersRepository.GetCustomersIncludeInvoice(id);
+            customerDto = _mapper.Map<CustomerDto>(customer);
+            
+            return Ok(customerDto);
+        }
+         
         [HttpGet("GetAll")]
         public async Task<IActionResult> Get()
         {
