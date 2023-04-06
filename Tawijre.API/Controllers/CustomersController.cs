@@ -18,7 +18,7 @@ namespace Twijre.API.Controllers
         private readonly IMapper _mapper;
         private readonly ISpecialCustomersRepository _specialCustomersRepository;
 
-        public CustomersController(IUnitOfWork unitOfWork, IMapper mapper , ISpecialCustomersRepository specialCustomersRepository)
+        public CustomersController(IUnitOfWork unitOfWork, IMapper mapper, ISpecialCustomersRepository specialCustomersRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -30,29 +30,28 @@ namespace Twijre.API.Controllers
             CustomerDto customerDto = new CustomerDto();
             var customer = await _specialCustomersRepository.GetCustomersIncludeInvoice(id);
             customerDto = _mapper.Map<CustomerDto>(customer);
-            
+
             return Ok(customerDto);
         }
-         
-        [HttpGet("GetAll")]
+
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var customers = await _unitOfWork.Customers.GetAllAsync();
             if (customers.Any())
             {
                 return Ok(_mapper.Map<List<CustomerDto>>(customers));
-
             }
             return NoContent();
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             try
             {
                 if (id == null) return BadRequest();
-                var customer = await _unitOfWork.Customers.GetByIdAsync(id);
+                var customer = await _specialCustomersRepository.GetCustomersIncludeInvoice(id);
                 if (customer == null) return NotFound();
                 return Ok(_mapper.Map<CustomerDto>(customer));
             }
@@ -62,7 +61,7 @@ namespace Twijre.API.Controllers
             }
         }
 
-        [HttpPost("Add")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] CustomerCreateDto createDto)
         {
             try
@@ -71,14 +70,14 @@ namespace Twijre.API.Controllers
                 var customer = _mapper.Map<Customer>(createDto);
                 var result = await _unitOfWork.Customers.AddAsync(customer);
                 _unitOfWork.Complete();
-                return Ok();
+                return Ok(_mapper.Map<CustomerDto>(customer));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("Update/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] CustomerUpdateDto updateDto)
         {
             if (id == null) return BadRequest();
@@ -89,7 +88,8 @@ namespace Twijre.API.Controllers
             _unitOfWork.Complete();
             return Ok(_mapper.Map<CustomerDto>(customer));
         }
-        [HttpDelete("Delete/{id}")]
+
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id == null) return BadRequest();

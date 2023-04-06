@@ -20,7 +20,8 @@ namespace Twaijri.Core.Repositories
         }
         public async Task<Customer> GetCustomersIncludeInvoice(int id)
         {
-            return await _context.Customers.Where(c => c.Id == id).Include(i => i.Invoices).FirstOrDefaultAsync();
+            return await _context.Customers.Where(c => c.Id == id)
+                .Include(i => i.Invoices).FirstOrDefaultAsync();
         }
     }
 }

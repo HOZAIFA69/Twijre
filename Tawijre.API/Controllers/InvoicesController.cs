@@ -22,9 +22,7 @@ namespace Twijre.API.Controllers
             _mapper = mapper;
         }
 
-
-
-        [HttpGet("GetAll")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var Invoices = await _unitOfWork.Invoices.GetAllAsync();
@@ -36,7 +34,7 @@ namespace Twijre.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -52,7 +50,7 @@ namespace Twijre.API.Controllers
             }
         }
 
-        [HttpPost("Add")]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] InvoiceCreateDto createDto)
         {
             try
@@ -62,14 +60,14 @@ namespace Twijre.API.Controllers
                 invoice.Value = createDto.InvoiceValue;
                 var result = await _unitOfWork.Invoices.AddAsync(invoice);
                 _unitOfWork.Complete();
-                return Ok();
+                return Ok(_mapper.Map<InvoicesDto>(result));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("Update/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] InvoiceUpdateDto updateDto)
         {
             if (id == null) return BadRequest();
@@ -80,7 +78,7 @@ namespace Twijre.API.Controllers
             _unitOfWork.Complete();
             return Ok(_mapper.Map<InvoicesDto>(invoice));
         }
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id == null) return BadRequest();
